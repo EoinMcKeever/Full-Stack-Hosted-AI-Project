@@ -55,10 +55,3 @@ To stop the application and remove containers, networks, and volumes created by 
 docker-compose down -v
 ```
 
-## Contributing
-
-Contributions to this project are welcome. Please fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the `LICENSE` file for details.

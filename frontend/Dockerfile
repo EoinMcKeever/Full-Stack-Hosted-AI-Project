@@ -1,19 +1,22 @@
-# Use an official Node runtime as a parent image
-FROM node:14
+# Stage 1: Build React App
+FROM node:20 as build
 
-# Set the working directory in the container
 WORKDIR /app
-
-# Copy the package.json and install dependencies
-COPY package.json /app/
+COPY package*.json ./
 RUN npm install
+COPY . .
+RUN npm run build
 
-# Bundle app source including the public and src directories
-COPY ./public /app/public
-COPY ./src /app/src
+# Stage 2: Serve with NGINX
+FROM nginx:alpine
 
-# Make port 3000 available to the world outside this container
-EXPOSE 3000
+# Remove the default nginx website
+RUN rm -rf /usr/share/nginx/html/*
 
-# Run npm start when the container launches
-CMD ["npm", "start"]
+# Copy built React files from build stage
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
